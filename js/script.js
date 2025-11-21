@@ -1,10 +1,12 @@
+// 1. Ambil elemen DOM
+
 const sendBtn = document.getElementById("sendBtn");
 const userInput = document.getElementById("userInput");
 const chatlog = document.getElementById("chatlog");
 
 // 2. Konfigurasi Gemini API
 
-const GEMINI_API_KEY = "AIzaSyA2V7oylzHmvBsCN3RXFkXWTjeGI_uOs-E";
+const GEMINI_API_KEY = "AIzaSyBWwM0FF-grUrgFfiVf5rbbktejGvOLksQ";
 
 const SYSTEM_PROMPT = `
 Kamu adalah chatbot jadwal kuliah kampus dummy.
@@ -36,24 +38,27 @@ Jumat:
 - 10.00 - Keamanan Informasi
 - 13.00 - Seminar Teknologi
 
-Jika pertanyaan di luar jadwal kuliah, jawab singkat:
+Jika pertanyaan di luar jadwal kuliah, jawab singkat
 bahwa kamu hanya fokus bantu soal jadwal kuliah di atas.
 `;
 
-// Fungsi untuk panggil Gemini API
+// 3. Fungsi panggil Gemini API
+
 async function callGemini(userMessage) {
   const url =
     "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent";
 
+  const fullPrompt =
+    SYSTEM_PROMPT +
+    "\n\nPertanyaan pengguna:\n" +
+    userMessage +
+    "\n\nJawab berdasarkan jadwal di atas.";
+
   const payload = {
-    systemInstruction: {
-      role: "user",
-      parts: [{ text: SYSTEM_PROMPT }],
-    },
     contents: [
       {
         role: "user",
-        parts: [{ text: userMessage }],
+        parts: [{ text: fullPrompt }],
       },
     ],
   };
@@ -68,13 +73,13 @@ async function callGemini(userMessage) {
   });
 
   if (!response.ok) {
-    console.error("Gemini error:", await response.text());
-    throw new Error("Request ke Gemini gagal");
+    const errText = await response.text();
+    console.error("Gemini error status:", response.status, errText);
+    throw new Error(`HTTP ${response.status}: ${errText}`);
   }
 
   const data = await response.json();
 
-  // Ambil teks dari response
   const parts = data.candidates?.[0]?.content?.parts || [];
   const replyText =
     parts.map((p) => p.text).join("") ||
@@ -83,7 +88,7 @@ async function callGemini(userMessage) {
   return replyText;
 }
 
-// 3. Fungsi untuk menambah pesan ke DOM
+// 4. Tambah pesan ke DOM
 
 function addMessage(type, text, extraClass = "") {
   const div = document.createElement("div");
@@ -95,16 +100,18 @@ function addMessage(type, text, extraClass = "") {
   return div;
 }
 
-// 4. Alur kirim pesan
+// 5. Alur kirim pesan
 
 async function sendMessage() {
   const message = userInput.value.trim();
   if (message === "") return;
 
+  // Tampilkan pesan user
   addMessage("user", message);
   userInput.value = "";
   userInput.focus();
 
+  // Tampilkan “lagi mikir…”
   const loadingBubble = addMessage(
     "bot",
     "Sebentar ya, aku lagi mikir…",
@@ -126,7 +133,7 @@ async function sendMessage() {
   }
 }
 
-// 5. Event Listener
+// 6. Event Listener
 
 sendBtn.addEventListener("click", () => {
   sendMessage();
@@ -138,7 +145,7 @@ userInput.addEventListener("keypress", (e) => {
   }
 });
 
-// 6. Pesan awal ketika halaman dibuka
+// 7. Pesan awal
 
 addMessage(
   "bot",
