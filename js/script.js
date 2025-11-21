@@ -4,7 +4,6 @@ const chatlog = document.getElementById("chatlog");
 
 // 2. Konfigurasi Gemini API
 
-// TODO: ganti string di bawah dengan API key kamu sendiri
 const GEMINI_API_KEY = "AIzaSyA2V7oylzHmvBsCN3RXFkXWTjeGI_uOs-E";
 
 const SYSTEM_PROMPT = `
@@ -13,29 +12,29 @@ Jawab singkat, jelas, dan pakai bahasa Indonesia santai.
 Gunakan jadwal berikut:
 
 Senin:
-- 08.00 – Algoritma Dasar
-- 10.00 – Matematika Diskrit
-- 13.00 – Praktikum Logika
+- 08.00 - Algoritma Dasar
+- 10.00 - Matematika Diskrit
+- 13.00 - Praktikum Logika
 
 Selasa:
-- 09.00 – Struktur Data
-- 11.00 – Sistem Operasi
-- 14.00 – Praktikum Struktur Data
+- 09.00 - Struktur Data
+- 11.00 - Sistem Operasi
+- 14.00 - Praktikum Struktur Data
 
 Rabu:
-- 08.00 – Basis Data
-- 10.00 – Jaringan Komputer
-- 13.00 – Praktikum Basis Data
+- 08.00 - Basis Data
+- 10.00 - Jaringan Komputer
+- 13.00 - Praktikum Basis Data
 
 Kamis:
-- 09.00 – Pemrograman Web
-- 11.00 – Interaksi Manusia dan Komputer
-- 15.00 – Praktikum Web
+- 09.00 - Pemrograman Web
+- 11.00 - Interaksi Manusia dan Komputer
+- 15.00 - Praktikum Web
 
 Jumat:
-- 08.00 – Kecerdasan Buatan
-- 10.00 – Keamanan Informasi
-- 13.00 – Seminar Teknologi
+- 08.00 - Kecerdasan Buatan
+- 10.00 - Keamanan Informasi
+- 13.00 - Seminar Teknologi
 
 Jika pertanyaan di luar jadwal kuliah, jawab singkat:
 bahwa kamu hanya fokus bantu soal jadwal kuliah di atas.
@@ -96,7 +95,7 @@ function addMessage(type, text, extraClass = "") {
   return div;
 }
 
-// 4. Alur kirim pesan (input → request → output)
+// 4. Alur kirim pesan
 
 async function sendMessage() {
   const message = userInput.value.trim();
